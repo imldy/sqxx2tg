@@ -104,14 +104,24 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         print(resp.text)
 
 
-CONF = load_conf()
-Telegram_CONF = CONF["Telegram"]
-Info_Source_CONF = CONF["Info_Source"]
+def start():
+    global CONF, Telegram_CONF, Info_Source_CONF
+    CONF = load_conf()
+    Telegram_CONF = CONF["Telegram"]
+    Info_Source_CONF = CONF["Info_Source"]
 
-dynamics = get_dynamics()  # 直接接口返回的数据
+    global dynamics
+    dynamics = get_dynamics()  # 直接接口返回的数据
 
-sq_dynamic_bili_list = get_dynamics_obj()  # 处理后，整理为对象的数据
+    sq_dynamic_bili_list = get_dynamics_obj()  # 处理后，整理为对象的数据
 
-bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
-push_message_2_TG(bot, sq_dynamic_bili_list)
-print("结束")
+    bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
+    push_message_2_TG(bot, sq_dynamic_bili_list)
+    print("结束")
+
+
+def tencent_SCF(a, b):
+    start()
+
+
+start()
