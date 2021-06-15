@@ -35,7 +35,7 @@ def get_dynamics():
     return dynamic_list
 
 
-def get_dynamics_obj():
+def get_dynamics_obj(dynamics):
     sq_dynamic_bili_list = []
     for dynamic in dynamics:
         # print(dynamic["card"])
@@ -110,10 +110,9 @@ def start():
     Telegram_CONF = CONF["Telegram"]
     Info_Source_CONF = CONF["Info_Source"]
 
-    global dynamics
     dynamics = get_dynamics()  # 直接接口返回的数据
 
-    sq_dynamic_bili_list = get_dynamics_obj()  # 处理后，整理为对象的数据
+    sq_dynamic_bili_list = get_dynamics_obj(dynamics)  # 处理后，整理为对象的数据
 
     bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
     push_message_2_TG(bot, sq_dynamic_bili_list)
