@@ -1,6 +1,17 @@
 import json
+import time
 import requests
 import telegram
+
+
+def get_datetime():
+    local_time = time.localtime()
+    dt = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
+    return dt
+
+
+def log(str: str):
+    print("{} - {}".format(get_datetime(), str))
 
 
 class SQ_Video_Bili():
@@ -38,7 +49,7 @@ def get_dynamics():
 def get_dynamics_obj(dynamics):
     sq_dynamic_bili_list = []
     for dynamic in dynamics:
-        # print(dynamic["card"])
+        # log(dynamic["card"])
         dynamic_desc = dynamic["desc"]  # 提取动态元数据
         if dynamic_desc["type"] == 8:  # 等于8意味着是视频发布
             card_obj = json.loads(dynamic["card"])  # 将卡片字符串转为Python对象
@@ -64,7 +75,7 @@ def get_dynamics_obj(dynamics):
             elif sq_dynamic_bili.card.title.startswith("【睡前故事"):
                 sq_dynamic_bili.card.tags = ["睡前故事"]
 
-            # print(sq_dynamic_bili.type, sq_dynamic_bili.card.title)
+            # log(sq_dynamic_bili.type, sq_dynamic_bili.card.title)
             sq_dynamic_bili_list.append(sq_dynamic_bili)
     return sq_dynamic_bili_list
 
@@ -86,7 +97,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         # 判断当前视频是否已经推送到TG
         if is_pushed(sq_dynamic_bili):
             # 已推送过，跳过此视频
-            print("视频：{video_title} 已推送过".format(video_title=sq_dynamic_bili.card.title))
+            log("视频：{video_title} 已推送过".format(video_title=sq_dynamic_bili.card.title))
             continue
         sq_video_bili = sq_dynamic_bili.card
         resp = bot.send_message(
@@ -101,7 +112,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
             , parse_mode=telegram.ParseMode.MARKDOWN
         )
         save_pushed_log(sq_video_bili)
-        print(resp.text)
+        log(resp.text)
 
 
 def start():
@@ -116,7 +127,7 @@ def start():
 
     bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
     push_message_2_TG(bot, sq_dynamic_bili_list)
-    print("结束")
+    log("结束")
 
 
 def tencent_SCF(a, b):
