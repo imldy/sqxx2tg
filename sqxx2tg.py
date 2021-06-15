@@ -74,8 +74,25 @@ def get_dynamics_obj():
     return sq_dynamic_bili_list
 
 
+def is_pushed(sq_dynamic_bili):
+    # 判断是否bvid已经在这个文件中
+    bvid_list = open("pushed_bvid.txt").read().strip().split("\n")
+    if sq_dynamic_bili.bvid in bvid_list:
+        return True
+    return False
+
+
+def save_pushed_log(sq_dynamic_bili):
+    open("pushed_bvid.txt", "a").write(sq_dynamic_bili.bvid + "\n")
+
+
 def push_message_2_TG(bot, sq_dynamic_bili_list):
     for sq_dynamic_bili in sq_dynamic_bili_list:
+        # 判断当前视频是否已经推送到TG
+        if is_pushed(sq_dynamic_bili):
+            # 已推送过，跳过此视频
+            print("视频：{video_title} 已推送过".format(video_title=sq_dynamic_bili.card.title))
+            continue
         sq_video_bili = sq_dynamic_bili.card
         resp = bot.send_message(
             chat_id=Telegram_CONF["Publish_Channel_ID"]
@@ -88,6 +105,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
                         )
             , parse_mode=telegram.ParseMode.MARKDOWN
         )
+        save_pushed_log(sq_video_bili)
         print(resp.text)
 
 
