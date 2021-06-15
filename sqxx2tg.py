@@ -27,11 +27,6 @@ def load_conf():
     return json.loads(open("conf.json").read().strip())
 
 
-CONF = load_conf()
-Telegram_CONF = CONF["Telegram"]
-Info_Source_CONF = CONF["Info_Source"]
-
-
 def get_dynamics():
     url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid={uid}".format(
         uid=Info_Source_CONF["bilibili_uid"])
@@ -108,6 +103,10 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         save_pushed_log(sq_video_bili)
         print(resp.text)
 
+
+CONF = load_conf()
+Telegram_CONF = CONF["Telegram"]
+Info_Source_CONF = CONF["Info_Source"]
 
 dynamics = get_dynamics()  # 直接接口返回的数据
 
