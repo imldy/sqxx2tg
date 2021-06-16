@@ -2,6 +2,7 @@ import json
 import time
 import requests
 import telegram
+import weibo_article
 
 
 def get_datetime():
@@ -88,8 +89,20 @@ def is_pushed(sq_dynamic_bili):
     return False
 
 
+def article_is_pushed(sq_article_weibo):
+    # 判断是否bvid已经在这个文件中
+    weibo_mid_list = open("pushed_weibo_mid.txt").read().strip().split("\n")
+    if sq_article_weibo.mid in weibo_mid_list:
+        return True
+    return False
+
+
 def save_pushed_log(sq_dynamic_bili):
     open("pushed_bvid.txt", "a").write(sq_dynamic_bili.bvid + "\n")
+
+
+def save_article_pushed_log(sq_article_weibo):
+    open("pushed_weibo_mid.txt", "a").write(sq_article_weibo.mid + "\n")
 
 
 def push_message_2_TG(bot, sq_dynamic_bili_list):
@@ -115,6 +128,32 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         log(resp.text)
 
 
+def get_article_obj():
+    # 专栏页面
+    return weibo_article.get_article_obj(Info_Source_CONF)
+
+
+def push_article_2_TG(bot, sq_article_weibo_list):
+    for sq_article_weibo in sq_article_weibo_list:
+        # 判断当前视频是否已经推送到TG
+        if article_is_pushed(sq_article_weibo):
+            # 已推送过，跳过此视频
+            log("文章：{video_title} 已推送过".format(video_title=sq_article_weibo.title))
+            continue
+        resp = bot.send_message(
+            chat_id=Telegram_CONF["Publish_Channel_ID"]
+            , text="{article_title}\n【文章链接】：{article_link}\n【封面】：[封面链接]({article_cover_pic_link})\n\n#{tag_str}"
+                .format(article_title=sq_article_weibo.title
+                        , article_link=sq_article_weibo.link
+                        , article_cover_pic_link=sq_article_weibo.cover_pic_link
+                        , tag_str=" #".join(sq_article_weibo.tags)  # 多个tag时自动添加
+                        )
+            , parse_mode=telegram.ParseMode.MARKDOWN
+        )
+        save_article_pushed_log(sq_article_weibo)
+        log(resp.text)
+
+
 def start():
     global CONF, Telegram_CONF, Info_Source_CONF
     CONF = load_conf()
@@ -127,6 +166,10 @@ def start():
 
     bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
     push_message_2_TG(bot, sq_dynamic_bili_list)
+
+    sq_article_weibo_list = get_article_obj()
+    push_article_2_TG(bot, sq_article_weibo_list)
+
     log("结束")
 
 
