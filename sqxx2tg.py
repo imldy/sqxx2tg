@@ -115,7 +115,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         sq_video_bili = sq_dynamic_bili.card
         resp = bot.send_message(
             chat_id=Telegram_CONF["Publish_Channel_ID"]
-            , text="{video_title}\n【介绍】：{video_introduce}\n【主要内容】：{video_desc}\n【视频链接】：{video_link}\n\n#{tag_str}"
+            , text="{video_title}\n【主要内容】：{video_desc}\n【内容介绍】：{video_introduce}\n【视频链接】：{video_link}\n\n#{tag_str}"
                 .format(video_title=sq_video_bili.title
                         , video_introduce=sq_video_bili.dynamic_str
                         , video_desc=sq_video_bili.desc
