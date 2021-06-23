@@ -115,7 +115,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
         sq_video_bili = sq_dynamic_bili.card
         resp = bot.send_message(
             chat_id=Telegram_CONF["Publish_Channel_ID"]
-            , text="{video_title}\n【主要内容】：{video_desc}\n【内容介绍】：{video_introduce}\n【视频链接】：{video_link}\n\n#{tag_str}"
+            , text="*{video_title}*\n【主要内容】：{video_desc}\n【内容介绍】：{video_introduce}\n【视频链接】：{video_link}\n\n#{tag_str}"
                 .format(video_title=sq_video_bili.title
                         , video_introduce=sq_video_bili.dynamic_str
                         , video_desc=sq_video_bili.desc
@@ -142,7 +142,7 @@ def push_article_2_TG(bot, sq_article_weibo_list):
             continue
         resp = bot.send_message(
             chat_id=Telegram_CONF["Publish_Channel_ID"]
-            , text="{article_title}\n【文章链接】：{article_link}\n【封面】：[封面链接]({article_cover_pic_link})\n\n#{tag_str}"
+            , text="*{article_title}*\n【文章链接】：{article_link}\n【封面】：[封面链接]({article_cover_pic_link})\n\n#{tag_str}"
                 .format(article_title=sq_article_weibo.title
                         , article_link=sq_article_weibo.link
                         , article_cover_pic_link=sq_article_weibo.cover_pic_link
