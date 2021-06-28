@@ -78,7 +78,7 @@ def get_dynamics_obj(dynamics):
 
             # log(sq_dynamic_bili.type, sq_dynamic_bili.card.title)
             sq_dynamic_bili_list.append(sq_dynamic_bili)
-    return sq_dynamic_bili_list
+    return sq_dynamic_bili_list[::-1]
 
 
 def is_pushed(sq_dynamic_bili):

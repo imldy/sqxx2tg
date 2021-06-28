@@ -112,7 +112,7 @@ def get_article_obj(Info_Source_CONF):
         sq_article_weibo = SQ_Article_Weibo(mid, title, cover_pic_link, link)
         sq_article_weibo.tags = ["睡前消息文章"]
         article_list.append(sq_article_weibo)
-    return article_list
+    return article_list[::-1]
 
 
 cookiejar = getNewWeiboCookie()
