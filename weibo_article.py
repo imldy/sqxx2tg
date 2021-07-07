@@ -96,6 +96,11 @@ def getNewWeiboCookie():
     })
     return cookiejar
 
+
+def get_article_cover_link_by():
+    return "暂无"
+
+
 def get_article_obj(Info_Source_CONF):
     column_url = Info_Source_CONF["weibo_column_url"]
     resp = requests.get(url=column_url, cookies=cookiejar)
@@ -105,10 +110,15 @@ def get_article_obj(Info_Source_CONF):
     article_list = []
     for i in article_html_list:
         mid = i.xpath("@mid")[0]
-        cover_pic_link = i.xpath("div[1]/img/@src")[0]
-        title = i.xpath("div[2]/h3/a/text()")[0]
-        # link = article_list.xpath("/div[2]/h3/a/@href")
-        link = i.xpath("@href")[0]
+        try:
+            # 获取封面链接，可能会被微博返回不正常数据
+            cover_pic_link = i.xpath("div[1]/img/@src")[0]
+            title = i.xpath("div[2]/h3/a/text()")[0]
+            link = i.xpath("@href")[0]
+        except IndexError as e:
+            cover_pic_link = get_article_cover_link_by()
+            title = i.xpath("div[1]/h3/text()")[0].replace("发布了头条文章：《", "").replace("》", "")
+            link = i.xpath("div[1]/h3/a[2]/@href")[0]
         sq_article_weibo = SQ_Article_Weibo(mid, title, cover_pic_link, link)
         sq_article_weibo.tags = ["睡前消息文章"]
         article_list.append(sq_article_weibo)
@@ -116,7 +126,6 @@ def get_article_obj(Info_Source_CONF):
 
 
 cookiejar = getNewWeiboCookie()
-
 
 # article_list = get_article_obj()
 # for i in article_list:
