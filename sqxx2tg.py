@@ -3,6 +3,7 @@ import time
 import requests
 import telegram
 import weibo_article
+from urllib.parse import quote
 
 
 def get_datetime():
@@ -118,13 +119,14 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
             , text="*{video_title}*\n"
                    "【主要内容】：{video_desc}\n"
                    "【内容介绍】：{video_introduce}\n"
-                   "【视频链接】：{video_link}\n"
+                   "【视频链接】：[bilibili]({video_link})|[YouTube]({youtube_video_link})\n"
                    "\n"
                    "#{tag_str}"
                 .format(video_title=sq_video_bili.title
                         , video_introduce=sq_video_bili.dynamic_str
                         , video_desc=sq_video_bili.desc
                         , video_link=sq_video_bili.link
+                        , youtube_video_link="https://www.youtube.com/results?search_query=" + quote(sq_video_bili.title)
                         , tag_str=" #".join(sq_video_bili.tags)  # 多个tag时自动添加
                         )
             , parse_mode=telegram.ParseMode.MARKDOWN
