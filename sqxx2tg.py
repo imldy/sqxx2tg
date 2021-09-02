@@ -91,7 +91,7 @@ def is_pushed(sq_dynamic_bili):
 
 
 def article_is_pushed(sq_article_weibo):
-    # 判断是否bvid已经在这个文件中
+    # 判断是否weibo_mid已经在这个文件中
     weibo_mid_list = open("pushed_weibo_mid.txt").read().strip().split("\n")
     if sq_article_weibo.mid in weibo_mid_list:
         return True
