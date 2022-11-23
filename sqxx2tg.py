@@ -76,6 +76,8 @@ def get_dynamics_obj(dynamics):
                 sq_dynamic_bili.card.tags = ["万物由来"]
             elif sq_dynamic_bili.card.title.startswith("【睡前故事"):
                 sq_dynamic_bili.card.tags = ["睡前故事"]
+            elif sq_dynamic_bili.card.title.startswith("【参考信息"):
+                sq_dynamic_bili.card.tags = ["参考信息"]
 
             # log(sq_dynamic_bili.type, sq_dynamic_bili.card.title)
             sq_dynamic_bili_list.append(sq_dynamic_bili)
