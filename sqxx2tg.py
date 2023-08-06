@@ -177,7 +177,10 @@ def start():
     push_message_2_TG(bot, sq_dynamic_bili_list)
 
     sq_article_weibo_list = get_article_obj()
-    push_article_2_TG(bot, sq_article_weibo_list)
+    if sq_article_weibo_list is None:
+        log("sq_article_weibo_list is None")
+    else:
+        push_article_2_TG(bot, sq_article_weibo_list)
 
     log("结束")
 

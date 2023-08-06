@@ -104,7 +104,7 @@ def get_article_cover_link_by():
 def get_article_obj(Info_Source_CONF):
     column_url = Info_Source_CONF["weibo_column_url"]
     if column_url == "" or column_url is None:
-        print("weibo column_url is empty")
+        return
     resp = requests.get(url=column_url, cookies=cookiejar)
     # print(resp.text)
     html = etree.HTML(resp.text)
