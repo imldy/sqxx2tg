@@ -41,10 +41,26 @@ def load_conf():
 
 
 def get_dynamics():
-    url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid={uid}".format(
-        uid=Info_Source_CONF["bilibili_uid"])
-    resp = requests.get(url)
-    dynamic_list = resp.json()["data"]["cards"]
+    uid_list = Info_Source_CONF["bilibili_uid_list"]
+    dynamic_list = []
+    offset_dynamic_id = None
+    max_count = 3
+    for uid in uid_list:
+        count = 0
+        while (True):
+            url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history"
+            params = {
+                "host_uid": uid,
+                "offset_dynamic_id": offset_dynamic_id
+            }
+            resp = requests.get(url, params=params)
+            rj = resp.json()
+            dynamic_list.append(rj["data"]["cards"])
+            count += 1
+            if rj["data"].haskey("next_offset") and count < max_count:
+                offset_dynamic_id = rj["data"]["next_offset"]
+            else:
+                break
     return dynamic_list
 
 
