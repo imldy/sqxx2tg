@@ -57,7 +57,7 @@ def get_dynamics():
             rj = resp.json()
             dynamic_list.append(rj["data"]["cards"])
             count += 1
-            if rj["data"].haskey("next_offset") and count < max_count:
+            if rj["data"].__contains__("next_offset") and count < max_count:
                 offset_dynamic_id = rj["data"]["next_offset"]
             else:
                 break
