@@ -43,9 +43,9 @@ def load_conf():
 def get_dynamics():
     uid_list = Info_Source_CONF["bilibili_uid_list"]
     dynamic_list = []
-    offset_dynamic_id = None
     max_count = 3
     for uid in uid_list:
+        offset_dynamic_id = None
         count = 0
         while (True):
             url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history"
