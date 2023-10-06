@@ -59,7 +59,7 @@ def get_dynamics():
                 # 没有更多了，也代表本次没有获取到新数据
                 break
             try:
-                dynamic_list.append(rj["data"]["cards"])
+                dynamic_list += rj["data"]["cards"]
             except KeyError as ke:
                 log("取动态卡片报错，不存在")
                 break
