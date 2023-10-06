@@ -55,9 +55,16 @@ def get_dynamics():
             }
             resp = requests.get(url, params=params)
             rj = resp.json()
-            dynamic_list.append(rj["data"]["cards"])
+            if rj["data"]["has_more"] == 0:
+                # 没有更多了，也代表本次没有获取到新数据
+                break
+            try:
+                dynamic_list.append(rj["data"]["cards"])
+            except KeyError as ke:
+                log("取动态卡片报错，不存在")
+                break
             count += 1
-            if rj["data"].__contains__("next_offset") and count < max_count:
+            if rj["data"]["next_offset"] != 0 and count < max_count:
                 offset_dynamic_id = rj["data"]["next_offset"]
             else:
                 break
