@@ -53,7 +53,10 @@ def get_dynamics():
                 "host_uid": uid,
                 "offset_dynamic_id": offset_dynamic_id
             }
-            resp = requests.get(url, params=params)
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+            resp = requests.get(url, params=params, headers=headers)
             rj = resp.json()
             if rj["data"]["has_more"] == 0:
                 # 没有更多了，也代表本次没有获取到新数据
