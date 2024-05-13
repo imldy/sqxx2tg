@@ -1,3 +1,4 @@
+import asyncio
 import json
 import time
 import requests
@@ -140,7 +141,7 @@ def save_article_pushed_log(sq_article_weibo):
     open("pushed_weibo_mid.txt", "a").write(sq_article_weibo.mid + "\n")
 
 
-def push_message_2_TG(bot, sq_dynamic_bili_list):
+async def push_message_2_TG(bot, sq_dynamic_bili_list):
     for sq_dynamic_bili in sq_dynamic_bili_list:
         # 判断当前视频是否已经推送到TG
         if is_pushed(sq_dynamic_bili):
@@ -148,7 +149,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
             log("视频：{video_title} 已推送过".format(video_title=sq_dynamic_bili.card.title))
             continue
         sq_video_bili = sq_dynamic_bili.card
-        resp = bot.send_message(
+        respPromise = bot.send_message(
             chat_id=Telegram_CONF["Publish_Channel_ID"]
             , text="*{video_title}*\n"
                    "【主要内容】：{video_desc}\n"
@@ -164,7 +165,9 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
                         , tag_str=" #".join(sq_video_bili.tags)  # 多个tag时自动添加
                         )
             , parse_mode=telegram.constants.ParseMode.MARKDOWN
+            , disable_notification=True
         )
+        resp = await respPromise
         save_pushed_log(sq_video_bili)
         log(resp.text)
 
@@ -206,7 +209,7 @@ def start():
     sq_dynamic_bili_list = get_dynamics_obj(dynamics)  # 处理后，整理为对象的数据
 
     bot = telegram.Bot(token=Telegram_CONF["Bot_Token"])
-    push_message_2_TG(bot, sq_dynamic_bili_list)
+    asyncio.run(push_message_2_TG(bot, sq_dynamic_bili_list))
 
     sq_article_weibo_list = get_article_obj()
     if sq_article_weibo_list is None:
