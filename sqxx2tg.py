@@ -44,28 +44,32 @@ def get_dynamics():
     uid_list = Info_Source_CONF["bilibili_uid_list"]
     dynamic_list = []
     max_count = 3
+    headers = {
+        "Cookie": Info_Source_CONF["bilibili_cookie"],
+        "User-Agent": Info_Source_CONF["User-Agent"]
+    }
     for uid in uid_list:
         offset_dynamic_id = None
         count = 0
         while (True):
-            url = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history"
+            url = "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space"
             params = {
-                "host_uid": uid,
-                "offset_dynamic_id": offset_dynamic_id
+                "host_mid": uid,
+                "offset": offset_dynamic_id
             }
-            resp = requests.get(url, params=params)
+            resp = requests.get(url, params=params, headers=headers)
             rj = resp.json()
             if rj["data"]["has_more"] == 0:
                 # 没有更多了，也代表本次没有获取到新数据
                 break
             try:
-                dynamic_list += rj["data"]["cards"]
+                dynamic_list += rj["data"]["items"]
             except KeyError as ke:
                 log("取动态卡片报错，不存在")
                 break
             count += 1
-            if rj["data"]["next_offset"] != 0 and count < max_count:
-                offset_dynamic_id = rj["data"]["next_offset"]
+            if rj["data"]["offset"] != 0 and count < max_count:
+                offset_dynamic_id = rj["data"]["offset"]
             else:
                 break
     return dynamic_list
@@ -75,21 +79,22 @@ def get_dynamics_obj(dynamics):
     sq_dynamic_bili_list = []
     for dynamic in dynamics:
         # log(dynamic["card"])
-        dynamic_desc = dynamic["desc"]  # 提取动态元数据
-        if dynamic_desc["type"] == 8:  # 等于8意味着是视频发布
-            card_obj = json.loads(dynamic["card"])  # 将卡片字符串转为Python对象
+        if dynamic["basic"]["comment_type"] == 1:  # 等于8意味着是视频发布
+            card_obj = dynamic["modules"]["module_dynamic"]["major"]["archive"]  # 将卡片字符串转为Python对象
             sq_video_bili = SQ_Video_Bili(
                 card_obj["aid"]
-                , dynamic_desc["bvid"]
+                , card_obj["bvid"]
                 , card_obj["title"]
+                , None
                 , card_obj["desc"]
-                , card_obj["dynamic"]
             )  #
+            if dynamic["modules"]["module_dynamic"]["desc"] != None:
+                sq_video_bili.desc = dynamic["modules"]["module_dynamic"]["desc"]["text"]
             sq_dynamic_bili = SQ_Dynamic_Bili(
-                dynamic_desc["dynamic_id"]
-                , dynamic_desc["type"]
-                , dynamic_desc["timestamp"]
-                , dynamic_desc["bvid"]
+                dynamic["id_str"]
+                , dynamic["basic"]["comment_type"]
+                , dynamic["modules"]["module_author"]["pub_ts"]
+                , card_obj["bvid"]
                 , sq_video_bili
             )
             # 给对象添加tag

@@ -5,6 +5,13 @@
   },
   "Info_Source": {
     "bilibili_uid": "",
+    "bilibili_uid_list": [
+      "316568752",
+      "1556651916",
+      "64219557",
+      "59104725"
+    ],
+    "bilibili_cookie" : "",
     "weibo_id": "",
     "weibo_column_url": "",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
