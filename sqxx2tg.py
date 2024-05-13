@@ -163,7 +163,7 @@ def push_message_2_TG(bot, sq_dynamic_bili_list):
                         , youtube_video_link="https://www.youtube.com/results?search_query=" + quote(sq_video_bili.title)
                         , tag_str=" #".join(sq_video_bili.tags)  # 多个tag时自动添加
                         )
-            , parse_mode=telegram.ParseMode.MARKDOWN
+            , parse_mode=telegram.constants.ParseMode.MARKDOWN
         )
         save_pushed_log(sq_video_bili)
         log(resp.text)
@@ -189,7 +189,7 @@ def push_article_2_TG(bot, sq_article_weibo_list):
                         , article_cover_pic_link=sq_article_weibo.cover_pic_link
                         , tag_str=" #".join(sq_article_weibo.tags)  # 多个tag时自动添加
                         )
-            , parse_mode=telegram.ParseMode.MARKDOWN
+            , parse_mode=telegram.constants.ParseMode.MARKDOWN
         )
         save_article_pushed_log(sq_article_weibo)
         log(resp.text)
