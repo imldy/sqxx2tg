@@ -57,7 +57,7 @@ def get_dynamics():
                 "host_mid": uid,
                 "offset": offset_dynamic_id
             }
-            resp = requests.get(url, params=params)
+            resp = requests.get(url, params=params, headers=headers)
             rj = resp.json()
             if rj["data"]["has_more"] == 0:
                 # 没有更多了，也代表本次没有获取到新数据
